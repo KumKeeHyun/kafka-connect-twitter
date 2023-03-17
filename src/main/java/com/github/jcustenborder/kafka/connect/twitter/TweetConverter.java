@@ -15,27 +15,7 @@
  */
 package com.github.jcustenborder.kafka.connect.twitter;
 
-import com.twitter.clientlib.model.CashtagEntity;
-import com.twitter.clientlib.model.ContextAnnotation;
-import com.twitter.clientlib.model.ContextAnnotationDomainFields;
-import com.twitter.clientlib.model.ContextAnnotationEntityFields;
-import com.twitter.clientlib.model.FullTextEntities;
-import com.twitter.clientlib.model.HashtagEntity;
-import com.twitter.clientlib.model.MentionEntity;
-import com.twitter.clientlib.model.Point;
-import com.twitter.clientlib.model.ReplySettings;
-import com.twitter.clientlib.model.Tweet;
-import com.twitter.clientlib.model.TweetAttachments;
-import com.twitter.clientlib.model.TweetEditControls;
-import com.twitter.clientlib.model.TweetGeo;
-import com.twitter.clientlib.model.TweetNonPublicMetrics;
-import com.twitter.clientlib.model.TweetOrganicMetrics;
-import com.twitter.clientlib.model.TweetPromotedMetrics;
-import com.twitter.clientlib.model.TweetPublicMetrics;
-import com.twitter.clientlib.model.TweetReferencedTweets;
-import com.twitter.clientlib.model.TweetWithheld;
-import com.twitter.clientlib.model.UrlEntity;
-import com.twitter.clientlib.model.UrlImage;
+import com.twitter.clientlib.model.*;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
@@ -847,67 +827,153 @@ public class TweetConverter {
 
   public static Struct convert(@Nonnull Tweet input) {
     return new Struct(TWEET_SCHEMA)
-        .put(Tweet.SERIALIZED_NAME_ID, input.getId())
-        .put(Tweet.SERIALIZED_NAME_CREATED_AT,
-            Optional.ofNullable(input.getCreatedAt())
-                .map(offset -> Date.from(offset.toInstant()))
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_TEXT, input.getText())
-        .put(Tweet.SERIALIZED_NAME_AUTHOR_ID, input.getAuthorId())
-        .put(Tweet.SERIALIZED_NAME_IN_REPLY_TO_USER_ID, input.getInReplyToUserId())
-        .put(Tweet.SERIALIZED_NAME_REFERENCED_TWEETS,
-            Optional.ofNullable(input.getReferencedTweets())
-                .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_ATTACHMENTS,
-            Optional.ofNullable(input.getAttachments())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_CONTEXT_ANNOTATIONS,
-            Optional.ofNullable(input.getContextAnnotations())
-                .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_WITHHELD,
-            Optional.ofNullable(input.getWithheld())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_GEO,
-            Optional.ofNullable(input.getGeo())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_ENTITIES,
-            Optional.ofNullable(input.getEntities())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_PUBLIC_METRICS,
-            Optional.ofNullable(input.getPublicMetrics())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_POSSIBLY_SENSITIVE, input.getPossiblySensitive())
-        .put(Tweet.SERIALIZED_NAME_LANG, input.getLang())
-        .put(Tweet.SERIALIZED_NAME_SOURCE, input.getSource())
-        .put(Tweet.SERIALIZED_NAME_NON_PUBLIC_METRICS,
-            Optional.ofNullable(input.getNonPublicMetrics())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_PROMOTED_METRICS,
-            Optional.ofNullable(input.getPromotedMetrics())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_ORGANIC_METRICS,
-            Optional.ofNullable(input.getOrganicMetrics())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_CONVERSATION_ID, input.getConversationId())
-        .put(Tweet.SERIALIZED_NAME_EDIT_CONTROLS,
-            Optional.ofNullable(input.getEditControls())
-                .map(TweetConverter::convert)
-                .orElse(null))
-        .put(Tweet.SERIALIZED_NAME_EDIT_HISTORY_TWEET_IDS, input.getEditHistoryTweetIds())
-        .put(Tweet.SERIALIZED_NAME_REPLY_SETTINGS,
-            Optional.ofNullable(input.getReplySettings())
-                .map(ReplySettings::getValue)
-                .orElse(null));
+            .put(Tweet.SERIALIZED_NAME_ID, input.getId())
+            .put(Tweet.SERIALIZED_NAME_CREATED_AT,
+                    Optional.ofNullable(input.getCreatedAt())
+                            .map(offset -> Date.from(offset.toInstant()))
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_TEXT, input.getText())
+            .put(Tweet.SERIALIZED_NAME_AUTHOR_ID, input.getAuthorId())
+            .put(Tweet.SERIALIZED_NAME_IN_REPLY_TO_USER_ID, input.getInReplyToUserId())
+            .put(Tweet.SERIALIZED_NAME_REFERENCED_TWEETS,
+                    Optional.ofNullable(input.getReferencedTweets())
+                            .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_ATTACHMENTS,
+                    Optional.ofNullable(input.getAttachments())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_CONTEXT_ANNOTATIONS,
+                    Optional.ofNullable(input.getContextAnnotations())
+                            .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_WITHHELD,
+                    Optional.ofNullable(input.getWithheld())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_GEO,
+                    Optional.ofNullable(input.getGeo())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_ENTITIES,
+                    Optional.ofNullable(input.getEntities())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_PUBLIC_METRICS,
+                    Optional.ofNullable(input.getPublicMetrics())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_POSSIBLY_SENSITIVE, input.getPossiblySensitive())
+            .put(Tweet.SERIALIZED_NAME_LANG, input.getLang())
+            .put(Tweet.SERIALIZED_NAME_SOURCE, input.getSource())
+            .put(Tweet.SERIALIZED_NAME_NON_PUBLIC_METRICS,
+                    Optional.ofNullable(input.getNonPublicMetrics())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_PROMOTED_METRICS,
+                    Optional.ofNullable(input.getPromotedMetrics())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_ORGANIC_METRICS,
+                    Optional.ofNullable(input.getOrganicMetrics())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_CONVERSATION_ID, input.getConversationId())
+            .put(Tweet.SERIALIZED_NAME_EDIT_CONTROLS,
+                    Optional.ofNullable(input.getEditControls())
+                            .map(TweetConverter::convert)
+                            .orElse(null))
+            .put(Tweet.SERIALIZED_NAME_EDIT_HISTORY_TWEET_IDS, input.getEditHistoryTweetIds())
+            .put(Tweet.SERIALIZED_NAME_REPLY_SETTINGS,
+                    Optional.ofNullable(input.getReplySettings())
+                            .map(ReplySettings::getValue)
+                            .orElse(null));
   }
 
+  public static final Schema TWEET_USER_SCHEMA = SchemaBuilder.struct()
+          .field(User.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .field(User.SERIALIZED_NAME_NAME, Schema.STRING_SCHEMA)
+          .field(User.SERIALIZED_NAME_USERNAME, Schema.STRING_SCHEMA)
+          .field(User.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(User.SERIALIZED_NAME_LOCATION, Schema.OPTIONAL_STRING_SCHEMA)
+          .build();
+
+  public static Struct convert(@Nonnull User user) {
+    return new Struct(TWEET_USER_SCHEMA)
+            .put(User.SERIALIZED_NAME_ID, user.getId())
+            .put(User.SERIALIZED_NAME_NAME, user.getName())
+            .put(User.SERIALIZED_NAME_USERNAME, user.getUsername())
+            .put(User.SERIALIZED_NAME_DESCRIPTION, user.getDescription())
+            .put(User.SERIALIZED_NAME_LOCATION, user.getLocation());
+  }
+
+  public static final Schema TWEET_PLACE_GEO_SCHEMA = SchemaBuilder.struct()
+          .optional()
+          .field(Geo.SERIALIZED_NAME_TYPE, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Geo.SERIALIZED_NAME_BBOX, SchemaBuilder.array(Schema.FLOAT64_SCHEMA).optional().build())
+          .build();
+
+  public static Struct convert(@Nonnull Geo geo) {
+    return new Struct(TWEET_PLACE_GEO_SCHEMA)
+            .put(Geo.SERIALIZED_NAME_TYPE, geo.getType().toString())
+            .put(Geo.SERIALIZED_NAME_BBOX, geo.getBbox());
+  }
+
+  public static final Schema TWEET_PLACE_SCHEMA = SchemaBuilder.struct()
+          .field(Place.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_FULL_NAME, Schema.STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_COUNTRY, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_COUNTRY_CODE, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_PLACE_TYPE, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Place.SERIALIZED_NAME_GEO, TWEET_PLACE_GEO_SCHEMA)
+          .build();
+
+  public static Struct convert(@Nonnull Place place) {
+    return new Struct(TWEET_PLACE_SCHEMA)
+            .put(Place.SERIALIZED_NAME_ID, place.getId())
+            .put(Place.SERIALIZED_NAME_FULL_NAME, place.getFullName())
+            .put(Place.SERIALIZED_NAME_NAME, place.getName())
+            .put(Place.SERIALIZED_NAME_COUNTRY, place.getCountry())
+            .put(Place.SERIALIZED_NAME_COUNTRY_CODE, place.getCountryCode())
+            .put(Place.SERIALIZED_NAME_GEO,
+                    Optional.ofNullable(place.getGeo())
+                            .map(TweetConverter::convert)
+                            .orElse(null));
+  }
+
+  public static final Schema TWEET_EXPANSIONS_SCHEMA = SchemaBuilder.struct()
+          .field(Expansions.SERIALIZED_NAME_USERS, SchemaBuilder.array(TWEET_USER_SCHEMA).optional().build())
+          .field(Expansions.SERIALIZED_NAME_PLACES, SchemaBuilder.array(TWEET_PLACE_SCHEMA).optional().build())
+          .optional()
+          .build();
+
+  public static Struct convert(@Nonnull Expansions expansions) {
+    return new Struct(TWEET_EXPANSIONS_SCHEMA)
+            .put(Expansions.SERIALIZED_NAME_USERS,
+                    Optional.ofNullable(expansions.getUsers())
+                            .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
+                            .orElse(null))
+            .put(Expansions.SERIALIZED_NAME_PLACES,
+                    Optional.ofNullable(expansions.getPlaces())
+                            .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
+                            .orElse(null));
+  }
+
+  public static final String SERIALIZED_NAME_TWEET = "tweet";
+  public static final String SERIALIZED_NAME_EXPANSIONS = "expansions";
+
+  public static final Schema TWEET_WITH_EXPANSIONS_SCHEMA = SchemaBuilder.struct()
+          .field(SERIALIZED_NAME_TWEET, TWEET_SCHEMA)
+          .field(SERIALIZED_NAME_EXPANSIONS, TWEET_EXPANSIONS_SCHEMA)
+          .build();
+  public static Struct convert(@Nonnull Tweet tweet, Expansions expansions) {
+
+    return new Struct(TWEET_WITH_EXPANSIONS_SCHEMA)
+            .put(SERIALIZED_NAME_TWEET, TweetConverter.convert(tweet))
+            .put(SERIALIZED_NAME_EXPANSIONS,
+                    Optional.ofNullable(expansions)
+                            .map(TweetConverter::convert)
+                            .orElse(null));
+  }
 }

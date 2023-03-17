@@ -16,13 +16,7 @@
 package com.github.jcustenborder.kafka.connect.twitter;
 
 import com.twitter.clientlib.JSON;
-import com.twitter.clientlib.model.FullTextEntities;
-import com.twitter.clientlib.model.HashtagEntity;
-import com.twitter.clientlib.model.Point;
-import com.twitter.clientlib.model.Tweet;
-import com.twitter.clientlib.model.TweetEditControls;
-import com.twitter.clientlib.model.TweetGeo;
-import com.twitter.clientlib.model.UrlEntity;
+import com.twitter.clientlib.model.*;
 import io.confluent.connect.avro.AvroConverter;
 import io.confluent.kafka.schemaregistry.client.MockSchemaRegistryClient;
 import org.apache.commons.io.IOUtils;
@@ -36,12 +30,29 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class TweetConverterTest {
 
   {
     // init twitter json deserializers
     new JSON();
+  }
+
+  @Test
+  public void shouldConvertExpansions() throws IOException {
+    Expansions expansions = Expansions.fromJson(IOUtils.resourceToString("/sample_tweets/expansions.json", StandardCharsets.UTF_8));
+    Struct result = TweetConverter.convert(expansions);
+    assertNotNull(result.getArray(Expansions.SERIALIZED_NAME_PLACES));
+    assertEquals(4, result
+            .<Struct>getArray(Expansions.SERIALIZED_NAME_PLACES).get(0)
+              .getStruct(Place.SERIALIZED_NAME_GEO)
+              .getArray(Geo.SERIALIZED_NAME_BBOX).size());
+
+    assertNotNull(result.getArray(Expansions.SERIALIZED_NAME_USERS));
+    assertEquals("Twitter Dev", result
+            .<Struct>getArray(Expansions.SERIALIZED_NAME_USERS).get(0)
+              .getString(User.SERIALIZED_NAME_NAME));
   }
 
   @Test
