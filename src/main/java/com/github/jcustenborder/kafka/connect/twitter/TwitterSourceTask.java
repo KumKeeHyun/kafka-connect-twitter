@@ -28,6 +28,7 @@ import com.twitter.clientlib.model.AddOrDeleteRulesResponse;
 import com.twitter.clientlib.model.AddRulesRequest;
 import com.twitter.clientlib.model.DeleteRulesRequest;
 import com.twitter.clientlib.model.DeleteRulesRequestDelete;
+import com.twitter.clientlib.model.Expansions;
 import com.twitter.clientlib.model.FilteredStreamingTweetResponse;
 import com.twitter.clientlib.model.Get2TweetsSampleStreamResponse;
 import com.twitter.clientlib.model.Rule;
@@ -136,27 +137,34 @@ public class TwitterSourceTask extends SourceTask {
   }
 
   private InputStream initTweetsStreamProcessing(TwitterApi apiInstance) throws ApiException {
-    InputStream twitterStream;
     if (config.filterRule != null) {
       log.info("Setting up filter rule = {}", config.filterRule);
       setFilterRule(apiInstance);
-      log.info("Starting tweets search stream.");
-      TweetsApi.APIsearchStreamRequest builder = apiInstance.tweets().searchStream();
-      if (config.tweetFields != null) {
-        log.info("Setting up tweet fields = {}", config.tweetFields);
-        builder = builder.tweetFields(Arrays.stream(config.tweetFields.split(",")).collect(Collectors.toSet()));
-      }
-      twitterStream = builder.execute(RETRIES);
-    } else {
-      log.info("Starting tweets sample stream.");
-      TweetsApi.APIsampleStreamRequest builder = apiInstance.tweets().sampleStream();
-      if (config.tweetFields != null) {
-        log.info("Setting up tweet fields = {}", config.tweetFields);
-        builder = builder.tweetFields(Arrays.stream(config.tweetFields.split(",")).collect(Collectors.toSet()));
-      }
-      twitterStream = builder.execute(RETRIES);
     }
-    return twitterStream;
+    log.info("Starting tweets search stream.");
+    TweetsApi.APIsearchStreamRequest streamRequest = buildStreamRequest(apiInstance);
+    return streamRequest.execute(RETRIES);
+  }
+
+  private TweetsApi.APIsearchStreamRequest buildStreamRequest(TwitterApi apiInstance) {
+    TweetsApi.APIsearchStreamRequest builder = apiInstance.tweets().searchStream();
+    if (config.tweetFields != null) {
+      log.info("Setting up tweet fields = {}", config.tweetFields);
+      builder = builder.tweetFields(Arrays.stream(config.tweetFields.split(",")).collect(Collectors.toSet()));
+    }
+    if (config.expansions != null) {
+      log.info("Setting up expansions = {}", config.expansions);
+      builder = builder.expansions(Arrays.stream(config.expansions.split(",")).collect(Collectors.toSet()));
+    }
+    if (config.userFields != null) {
+      log.info("Setting up user fields = {}", config.userFields);
+      builder = builder.userFields(Arrays.stream(config.userFields.split(",")).collect(Collectors.toSet()));
+    }
+    if (config.placeFields != null) {
+      log.info("Setting up place fields = {}", config.placeFields);
+      builder = builder.placeFields(Arrays.stream(config.placeFields.split(",")).collect(Collectors.toSet()));
+    }
+    return builder;
   }
 
   private void setFilterRule(TwitterApi apiInstance) throws ApiException {
@@ -185,7 +193,8 @@ public class TwitterSourceTask extends SourceTask {
     try {
       FilteredStreamingTweetResponse tweetResponse = FilteredStreamingTweetResponse.fromJson(line);
       if (tweetResponse != null) {
-        onTweet(tweetResponse.getData());
+//        onTweet(tweetResponse.getData());
+        onTweet(tweetResponse.getData(), tweetResponse.getIncludes());
       }
     } catch (Exception ex) {
       log.error("Exception during TweetsSampleStreamResponse processing - will be skipped", ex);
@@ -196,7 +205,8 @@ public class TwitterSourceTask extends SourceTask {
     try {
       Get2TweetsSampleStreamResponse tweetResponse = Get2TweetsSampleStreamResponse.fromJson(line);
       if (tweetResponse != null) {
-        onTweet(tweetResponse.getData());
+//        onTweet(tweetResponse.getData());
+        onTweet(tweetResponse.getData(), tweetResponse.getIncludes());
       }
     } catch (Exception ex) {
       log.error("Exception during Get2TweetsSampleStreamResponse processing - will be skipped", ex);
@@ -214,6 +224,7 @@ public class TwitterSourceTask extends SourceTask {
     running = false;
   }
 
+  @Deprecated
   public void onTweet(Tweet tweet) {
     try {
       Struct value = TweetConverter.convert(tweet);
@@ -222,6 +233,20 @@ public class TwitterSourceTask extends SourceTask {
       Map<String, ?> sourceOffset = ImmutableMap.of();
 
       SourceRecord record = new SourceRecord(sourcePartition, sourceOffset, config.topic, Schema.STRING_SCHEMA, tweet.getId(), TweetConverter.TWEET_SCHEMA, value);
+      messageQueue.add(record);
+    } catch (Exception ex) {
+      log.error("Exception thrown", ex);
+    }
+  }
+
+  public void onTweet(Tweet tweet, Expansions expansions) {
+    try {
+      Struct value = TweetConverter.convert(tweet, expansions);
+
+      Map<String, ?> sourcePartition = ImmutableMap.of();
+      Map<String, ?> sourceOffset = ImmutableMap.of();
+
+      SourceRecord record = new SourceRecord(sourcePartition, sourceOffset, config.topic, Schema.STRING_SCHEMA, tweet.getId(), TweetConverter.TWEET_WITH_EXPANSIONS_SCHEMA, value);
       messageQueue.add(record);
     } catch (Exception ex) {
       log.error("Exception thrown", ex);

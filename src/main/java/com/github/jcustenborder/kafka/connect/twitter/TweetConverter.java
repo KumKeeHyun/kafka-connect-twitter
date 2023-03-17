@@ -15,7 +15,31 @@
  */
 package com.github.jcustenborder.kafka.connect.twitter;
 
-import com.twitter.clientlib.model.*;
+import com.twitter.clientlib.model.CashtagEntity;
+import com.twitter.clientlib.model.ContextAnnotation;
+import com.twitter.clientlib.model.ContextAnnotationDomainFields;
+import com.twitter.clientlib.model.ContextAnnotationEntityFields;
+import com.twitter.clientlib.model.Expansions;
+import com.twitter.clientlib.model.FullTextEntities;
+import com.twitter.clientlib.model.Geo;
+import com.twitter.clientlib.model.HashtagEntity;
+import com.twitter.clientlib.model.MentionEntity;
+import com.twitter.clientlib.model.Place;
+import com.twitter.clientlib.model.Point;
+import com.twitter.clientlib.model.ReplySettings;
+import com.twitter.clientlib.model.Tweet;
+import com.twitter.clientlib.model.TweetAttachments;
+import com.twitter.clientlib.model.TweetEditControls;
+import com.twitter.clientlib.model.TweetGeo;
+import com.twitter.clientlib.model.TweetNonPublicMetrics;
+import com.twitter.clientlib.model.TweetOrganicMetrics;
+import com.twitter.clientlib.model.TweetPromotedMetrics;
+import com.twitter.clientlib.model.TweetPublicMetrics;
+import com.twitter.clientlib.model.TweetReferencedTweets;
+import com.twitter.clientlib.model.TweetWithheld;
+import com.twitter.clientlib.model.UrlEntity;
+import com.twitter.clientlib.model.UrlImage;
+import com.twitter.clientlib.model.User;
 import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
