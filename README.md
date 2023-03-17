@@ -14,20 +14,22 @@ This Twitter Source connector is used to pull data from Twitter in realtime.
 name=connector1
 tasks.max=1
 connector.class=com.github.jcustenborder.kafka.connect.twitter.TwitterSourceConnector
-# Set these required values
-twitter.bearerToken=
+
 kafka.tweets.topic=
-# And optionally these values
-filter.rule=
-tweet.fields=
+twitter.bearerToken=
+twitter.filter.rule=(chatgpt) lang:en -is:retweet
+twitter.expansions=author_id,geo.place_id
+twitter.fields.tweet=author_id,created_at,geo,id,text,lang
+twitter.fields.user=description,location
+twitter.fields.place=country,country_code,full_name,geo,id,name,place_type
 ```
 
-| Name                | Description                                                                                                                                                                                                                                                                                                            | Type     |
-|---------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| twitter.bearerToken | OAuth2 Bearer token with at least Elevated Twitter API access level                                                                                                                                                                                                                                                    | password |
-| kafka.tweets.topic  | Kafka topic to write the tweets to.                                                                                                                                                                                                                                                                                    | string   |
-| filter.rule         | Filtering rules (see https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule for details).                                                                                                                                                                                     | string   |
-| tweet.fields        | Fields that will be returned for tweet. To fetch all fields, use: attachments,author_id,context_annotations,conversation_id,created_at,edit_controls,edit_history_tweet_ids,<br/>entities,geo,id,in_reply_to_user_id,lang,possibly_sensitive,public_metrics,referenced_tweets,reply_settings,<br/>source,text,withheld | string   |
+| Name                | Description                                                                                                                        | Type     |
+|---------------------|------------------------------------------------------------------------------------------------------------------------------------|----------|
+| twitter.bearerToken | OAuth2 Bearer token with at least Elevated Twitter API access level                                                                | password |
+| kafka.tweets.topic  | Kafka topic to write the tweets to.                                                                                                | string   |
+| twitter.filter.rule | Filtering rules (see https://developer.twitter.com/en/docs/twitter-api/tweets/filtered-stream/integrate/build-a-rule for details). | string   |
+| twitter.expansions  | Expand objects referenced in the payload. (see https://developer.twitter.com/en/docs/twitter-api/expansions)                       | string   |
 
 # Schemas
 
