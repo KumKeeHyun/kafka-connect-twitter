@@ -40,14 +40,12 @@ import com.twitter.clientlib.model.TweetWithheld;
 import com.twitter.clientlib.model.UrlEntity;
 import com.twitter.clientlib.model.UrlImage;
 import com.twitter.clientlib.model.User;
-import org.apache.kafka.connect.data.Decimal;
 import org.apache.kafka.connect.data.Schema;
 import org.apache.kafka.connect.data.SchemaBuilder;
 import org.apache.kafka.connect.data.Struct;
 import org.apache.kafka.connect.data.Timestamp;
 
 import javax.annotation.Nonnull;
-import java.math.RoundingMode;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
@@ -71,9 +69,10 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_REFERENCED_TWEETS_ITEM_SCHEMA = SchemaBuilder.struct()
-      .field(TweetReferencedTweets.SERIALIZED_NAME_TYPE, Schema.STRING_SCHEMA)
-      .field(TweetReferencedTweets.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
-      .build();
+          .name("TweetReferencedTweets")
+          .field(TweetReferencedTweets.SERIALIZED_NAME_TYPE, Schema.STRING_SCHEMA)
+          .field(TweetReferencedTweets.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .build();
 
 
   public static Struct convert(@Nonnull TweetReferencedTweets input) {
@@ -104,10 +103,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_ATTACHMENTS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetAttachments.SERIALIZED_NAME_MEDIA_KEYS, SchemaBuilder.array(Schema.STRING_SCHEMA).optional())
-      .field(TweetAttachments.SERIALIZED_NAME_POLL_IDS, SchemaBuilder.array(Schema.STRING_SCHEMA).optional())
-      .build();
+          .name("TweetAttachments")
+          .optional()
+          .field(TweetAttachments.SERIALIZED_NAME_MEDIA_KEYS, SchemaBuilder.array(Schema.STRING_SCHEMA).optional())
+          .field(TweetAttachments.SERIALIZED_NAME_POLL_IDS, SchemaBuilder.array(Schema.STRING_SCHEMA).optional())
+          .build();
 
   public static Struct convert(@Nonnull TweetAttachments input) {
     return new Struct(TWEET_ATTACHMENTS_SCHEMA)
@@ -132,10 +132,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema CONTEXT_ANNOTATION_DOMAIN_FIELDS_SCHEMA = SchemaBuilder.struct()
-      .field(ContextAnnotationDomainFields.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
-      .field(ContextAnnotationDomainFields.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(ContextAnnotationDomainFields.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
-      .build();
+          .name("ContextAnnotationDomainFields")
+          .field(ContextAnnotationDomainFields.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .field(ContextAnnotationDomainFields.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(ContextAnnotationDomainFields.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull ContextAnnotationDomainFields input) {
     return new Struct(CONTEXT_ANNOTATION_DOMAIN_FIELDS_SCHEMA)
@@ -161,10 +162,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema CONTEXT_ANNOTATION_DOMAIN_ENTITY_SCHEMA = SchemaBuilder.struct()
-      .field(ContextAnnotationEntityFields.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
-      .field(ContextAnnotationEntityFields.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(ContextAnnotationEntityFields.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
-      .build();
+          .name("ContextAnnotationEntityFields")
+          .field(ContextAnnotationEntityFields.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .field(ContextAnnotationEntityFields.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(ContextAnnotationEntityFields.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull ContextAnnotationEntityFields input) {
     return new Struct(CONTEXT_ANNOTATION_DOMAIN_ENTITY_SCHEMA)
@@ -186,10 +188,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema CONTEXT_ANNOTATION_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(ContextAnnotation.SERIALIZED_NAME_DOMAIN, CONTEXT_ANNOTATION_DOMAIN_FIELDS_SCHEMA)
-      .field(ContextAnnotation.SERIALIZED_NAME_ENTITY, CONTEXT_ANNOTATION_DOMAIN_ENTITY_SCHEMA)
-      .build();
+          .name("ContextAnnotation")
+          .optional()
+          .field(ContextAnnotation.SERIALIZED_NAME_DOMAIN, CONTEXT_ANNOTATION_DOMAIN_FIELDS_SCHEMA)
+          .field(ContextAnnotation.SERIALIZED_NAME_ENTITY, CONTEXT_ANNOTATION_DOMAIN_ENTITY_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull ContextAnnotation input) {
     return new Struct(CONTEXT_ANNOTATION_SCHEMA)
@@ -220,11 +223,12 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_WITHHELD_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetWithheld.SERIALIZED_NAME_COPYRIGHT, Schema.BOOLEAN_SCHEMA)
-      .field(TweetWithheld.SERIALIZED_NAME_COUNTRY_CODES, SchemaBuilder.array(Schema.STRING_SCHEMA))
-      .field(TweetWithheld.SERIALIZED_NAME_SCOPE, Schema.OPTIONAL_STRING_SCHEMA)
-      .build();
+          .name("TweetWithheld")
+          .optional()
+          .field(TweetWithheld.SERIALIZED_NAME_COPYRIGHT, Schema.BOOLEAN_SCHEMA)
+          .field(TweetWithheld.SERIALIZED_NAME_COUNTRY_CODES, SchemaBuilder.array(Schema.STRING_SCHEMA))
+          .field(TweetWithheld.SERIALIZED_NAME_SCOPE, Schema.OPTIONAL_STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetWithheld input) {
     return new Struct(TWEET_WITHHELD_SCHEMA)
@@ -236,7 +240,7 @@ public class TweetConverter {
                 .orElse(null));
   }
 
-  private static final int POINTS_COORDINATES_SCALE = 8;
+  private static final int POINTS_COORDINATES_SCALE = 6;
 
   /*{
       "type" : "object",
@@ -257,16 +261,17 @@ public class TweetConverter {
       }
     }*/
   public static final Schema POINT_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(Point.SERIALIZED_NAME_TYPE, Schema.STRING_SCHEMA)
-      .field(Point.SERIALIZED_NAME_COORDINATES, SchemaBuilder.array(Decimal.schema(POINTS_COORDINATES_SCALE)))
-      .build();
+          .name("Point")
+          .optional()
+          .field(Point.SERIALIZED_NAME_TYPE, Schema.STRING_SCHEMA)
+          .field(Point.SERIALIZED_NAME_COORDINATES, SchemaBuilder.array(Schema.FLOAT64_SCHEMA))
+          .build();
 
   public static Struct convert(@Nonnull Point input) {
     return new Struct(POINT_SCHEMA)
         .put(Point.SERIALIZED_NAME_TYPE, input.getType().getValue())
         .put(Point.SERIALIZED_NAME_COORDINATES, input.getCoordinates().stream()
-            .map(d -> d.setScale(POINTS_COORDINATES_SCALE, RoundingMode.UNNECESSARY))
+            .map(d -> d.doubleValue())
             .collect(Collectors.toList()));
   }
 
@@ -282,10 +287,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_GEO_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetGeo.SERIALIZED_NAME_COORDINATES, POINT_SCHEMA)
-      .field(TweetGeo.SERIALIZED_NAME_PLACE_ID, Schema.OPTIONAL_STRING_SCHEMA)
-      .build();
+          .name("TweetGeo")
+          .optional()
+          .field(TweetGeo.SERIALIZED_NAME_COORDINATES, POINT_SCHEMA)
+          .field(TweetGeo.SERIALIZED_NAME_PLACE_ID, Schema.OPTIONAL_STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetGeo input) {
     return new Struct(TWEET_GEO_SCHEMA)
@@ -314,10 +320,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema URL_IMAGE_SCHEMA = SchemaBuilder.struct()
-      .field(UrlImage.SERIALIZED_NAME_URL, Schema.STRING_SCHEMA)
-      .field(UrlImage.SERIALIZED_NAME_HEIGHT, Schema.INT32_SCHEMA)
-      .field(UrlImage.SERIALIZED_NAME_WIDTH, Schema.INT32_SCHEMA)
-      .build();
+          .name("UrlImage")
+          .field(UrlImage.SERIALIZED_NAME_URL, Schema.STRING_SCHEMA)
+          .field(UrlImage.SERIALIZED_NAME_HEIGHT, Schema.INT32_SCHEMA)
+          .field(UrlImage.SERIALIZED_NAME_WIDTH, Schema.INT32_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull UrlImage input) {
     return new Struct(URL_IMAGE_SCHEMA)
@@ -377,17 +384,18 @@ public class TweetConverter {
       }
     }*/
   public static final Schema URL_ENTITY_SCHEMA = SchemaBuilder.struct()
-      .field(UrlEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_URL, Schema.STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_EXPANDED_URL, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_DISPLAY_URL, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_UNWOUND_URL, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_STATUS, Schema.OPTIONAL_INT32_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_TITLE, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(UrlEntity.SERIALIZED_NAME_IMAGES, SchemaBuilder.array(URL_IMAGE_SCHEMA).optional().build())
-      .build();
+          .name("UrlEntity")
+          .field(UrlEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_URL, Schema.STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_EXPANDED_URL, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_DISPLAY_URL, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_UNWOUND_URL, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_STATUS, Schema.OPTIONAL_INT32_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_TITLE, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_DESCRIPTION, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(UrlEntity.SERIALIZED_NAME_IMAGES, SchemaBuilder.array(URL_IMAGE_SCHEMA).optional().build())
+          .build();
 
   public static Struct convert(@Nonnull UrlEntity input) {
     return new Struct(URL_ENTITY_SCHEMA)
@@ -430,10 +438,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema HASHTAG_ENTITY_SCHEMA = SchemaBuilder.struct()
-      .field(HashtagEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
-      .field(HashtagEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
-      .field(HashtagEntity.SERIALIZED_NAME_TAG, Schema.STRING_SCHEMA)
-      .build();
+          .name("HashtagEntity")
+          .field(HashtagEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
+          .field(HashtagEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
+          .field(HashtagEntity.SERIALIZED_NAME_TAG, Schema.STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull HashtagEntity input) {
     return new Struct(HASHTAG_ENTITY_SCHEMA)
@@ -465,11 +474,12 @@ public class TweetConverter {
       }
     }*/
   public static final Schema MENTION_ENTITY_SCHEMA = SchemaBuilder.struct()
-      .field(MentionEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
-      .field(MentionEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
-      .field(MentionEntity.SERIALIZED_NAME_USERNAME, Schema.STRING_SCHEMA)
-      .field(MentionEntity.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
-      .build();
+          .name("MentionEntity")
+          .field(MentionEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
+          .field(MentionEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
+          .field(MentionEntity.SERIALIZED_NAME_USERNAME, Schema.STRING_SCHEMA)
+          .field(MentionEntity.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull MentionEntity input) {
     return new Struct(MENTION_ENTITY_SCHEMA)
@@ -497,10 +507,11 @@ public class TweetConverter {
       }
     }*/
   public static final Schema CASHTAG_ENTITY_SCHEMA = SchemaBuilder.struct()
-      .field(CashtagEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
-      .field(CashtagEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
-      .field(CashtagEntity.SERIALIZED_NAME_TAG, Schema.STRING_SCHEMA)
-      .build();
+          .name("CashtagEntity")
+          .field(CashtagEntity.SERIALIZED_NAME_START, Schema.INT32_SCHEMA)
+          .field(CashtagEntity.SERIALIZED_NAME_END, Schema.INT32_SCHEMA)
+          .field(CashtagEntity.SERIALIZED_NAME_TAG, Schema.STRING_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull CashtagEntity input) {
     return new Struct(CASHTAG_ENTITY_SCHEMA)
@@ -543,12 +554,13 @@ public class TweetConverter {
       }
     }*/
   public static final Schema FULL_TEXT_ENTITIES_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(FullTextEntities.SERIALIZED_NAME_URLS, SchemaBuilder.array(URL_ENTITY_SCHEMA).optional().build())
-      .field(FullTextEntities.SERIALIZED_NAME_HASHTAGS, SchemaBuilder.array(HASHTAG_ENTITY_SCHEMA).optional().build())
-      .field(FullTextEntities.SERIALIZED_NAME_MENTIONS, SchemaBuilder.array(MENTION_ENTITY_SCHEMA).optional().build())
-      .field(FullTextEntities.SERIALIZED_NAME_CASHTAGS, SchemaBuilder.array(CASHTAG_ENTITY_SCHEMA).optional().build())
-      .build();
+          .name("FullTextEntities")
+          .optional()
+          .field(FullTextEntities.SERIALIZED_NAME_URLS, SchemaBuilder.array(URL_ENTITY_SCHEMA).optional().build())
+          .field(FullTextEntities.SERIALIZED_NAME_HASHTAGS, SchemaBuilder.array(HASHTAG_ENTITY_SCHEMA).optional().build())
+          .field(FullTextEntities.SERIALIZED_NAME_MENTIONS, SchemaBuilder.array(MENTION_ENTITY_SCHEMA).optional().build())
+          .field(FullTextEntities.SERIALIZED_NAME_CASHTAGS, SchemaBuilder.array(CASHTAG_ENTITY_SCHEMA).optional().build())
+          .build();
 
   public static Struct convert(@Nonnull FullTextEntities input) {
     return new Struct(FULL_TEXT_ENTITIES_SCHEMA)
@@ -589,12 +601,13 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_PUBLIC_METRICS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetPublicMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetPublicMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetPublicMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetPublicMetrics.SERIALIZED_NAME_QUOTE_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .build();
+          .name("TweetPublicMetrics")
+          .optional()
+          .field(TweetPublicMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetPublicMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetPublicMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetPublicMetrics.SERIALIZED_NAME_QUOTE_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetPublicMetrics input) {
     return new Struct(TWEET_PUBLIC_METRICS_SCHEMA)
@@ -614,9 +627,10 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_NON_PUBLIC_METRICS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetNonPublicMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .build();
+          .name("TweetNonPublicMetrics")
+          .optional()
+          .field(TweetNonPublicMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetNonPublicMetrics input) {
     return new Struct(TWEET_NON_PUBLIC_METRICS_SCHEMA)
@@ -645,12 +659,13 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_PROMOTED_METRICS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetPromotedMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .field(TweetPromotedMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .field(TweetPromotedMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .field(TweetPromotedMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
-      .build();
+          .name("TweetPromotedMetrics")
+          .optional()
+          .field(TweetPromotedMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .field(TweetPromotedMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .field(TweetPromotedMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .field(TweetPromotedMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.OPTIONAL_INT32_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetPromotedMetrics input) {
     return new Struct(TWEET_PROMOTED_METRICS_SCHEMA)
@@ -679,12 +694,13 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_ORGANIC_METRICS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetOrganicMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetOrganicMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetOrganicMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.INT32_SCHEMA)
-      .field(TweetOrganicMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.INT32_SCHEMA)
-      .build();
+          .name("TweetOrganicMetrics")
+          .optional()
+          .field(TweetOrganicMetrics.SERIALIZED_NAME_IMPRESSION_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetOrganicMetrics.SERIALIZED_NAME_RETWEET_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetOrganicMetrics.SERIALIZED_NAME_REPLY_COUNT, Schema.INT32_SCHEMA)
+          .field(TweetOrganicMetrics.SERIALIZED_NAME_LIKE_COUNT, Schema.INT32_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetOrganicMetrics input) {
     return new Struct(TWEET_ORGANIC_METRICS_SCHEMA)
@@ -715,11 +731,12 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_EDIT_CONTROLS_SCHEMA = SchemaBuilder.struct()
-      .optional()
-      .field(TweetEditControls.SERIALIZED_NAME_EDITABLE_UNTIL, Timestamp.SCHEMA)
-      .field(TweetEditControls.SERIALIZED_NAME_EDITS_REMAINING, Schema.INT32_SCHEMA)
-      .field(TweetEditControls.SERIALIZED_NAME_IS_EDIT_ELIGIBLE, Schema.BOOLEAN_SCHEMA)
-      .build();
+          .name("TweetEditControls")
+          .optional()
+          .field(TweetEditControls.SERIALIZED_NAME_EDITABLE_UNTIL, Timestamp.SCHEMA)
+          .field(TweetEditControls.SERIALIZED_NAME_EDITS_REMAINING, Schema.INT32_SCHEMA)
+          .field(TweetEditControls.SERIALIZED_NAME_IS_EDIT_ELIGIBLE, Schema.BOOLEAN_SCHEMA)
+          .build();
 
   public static Struct convert(@Nonnull TweetEditControls input) {
     return new Struct(TWEET_EDIT_CONTROLS_SCHEMA)
@@ -826,28 +843,29 @@ public class TweetConverter {
       }
     }*/
   public static final Schema TWEET_SCHEMA = SchemaBuilder.struct()
-      .field(Tweet.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_CREATED_AT, Timestamp.builder().optional().build())
-      .field(Tweet.SERIALIZED_NAME_TEXT, Schema.STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_AUTHOR_ID, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_IN_REPLY_TO_USER_ID, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_REFERENCED_TWEETS, SchemaBuilder.array(TWEET_REFERENCED_TWEETS_ITEM_SCHEMA).optional().build())
-      .field(Tweet.SERIALIZED_NAME_ATTACHMENTS, TWEET_ATTACHMENTS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_CONTEXT_ANNOTATIONS, SchemaBuilder.array(CONTEXT_ANNOTATION_SCHEMA).optional().build())
-      .field(Tweet.SERIALIZED_NAME_WITHHELD, TWEET_WITHHELD_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_GEO, TWEET_GEO_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_ENTITIES, FULL_TEXT_ENTITIES_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_PUBLIC_METRICS, TWEET_PUBLIC_METRICS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_POSSIBLY_SENSITIVE, Schema.OPTIONAL_BOOLEAN_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_LANG, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_SOURCE, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_NON_PUBLIC_METRICS, TWEET_NON_PUBLIC_METRICS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_PROMOTED_METRICS, TWEET_PROMOTED_METRICS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_ORGANIC_METRICS, TWEET_ORGANIC_METRICS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_CONVERSATION_ID, Schema.OPTIONAL_STRING_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_EDIT_CONTROLS, TWEET_EDIT_CONTROLS_SCHEMA)
-      .field(Tweet.SERIALIZED_NAME_EDIT_HISTORY_TWEET_IDS, SchemaBuilder.array(Schema.STRING_SCHEMA))
-      .field(Tweet.SERIALIZED_NAME_REPLY_SETTINGS, Schema.OPTIONAL_STRING_SCHEMA);
+          .name("Tweet")
+          .field(Tweet.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_CREATED_AT, Timestamp.builder().optional().build())
+          .field(Tweet.SERIALIZED_NAME_TEXT, Schema.STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_AUTHOR_ID, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_IN_REPLY_TO_USER_ID, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_REFERENCED_TWEETS, SchemaBuilder.array(TWEET_REFERENCED_TWEETS_ITEM_SCHEMA).optional().build())
+          .field(Tweet.SERIALIZED_NAME_ATTACHMENTS, TWEET_ATTACHMENTS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_CONTEXT_ANNOTATIONS, SchemaBuilder.array(CONTEXT_ANNOTATION_SCHEMA).optional().build())
+          .field(Tweet.SERIALIZED_NAME_WITHHELD, TWEET_WITHHELD_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_GEO, TWEET_GEO_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_ENTITIES, FULL_TEXT_ENTITIES_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_PUBLIC_METRICS, TWEET_PUBLIC_METRICS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_POSSIBLY_SENSITIVE, Schema.OPTIONAL_BOOLEAN_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_LANG, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_SOURCE, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_NON_PUBLIC_METRICS, TWEET_NON_PUBLIC_METRICS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_PROMOTED_METRICS, TWEET_PROMOTED_METRICS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_ORGANIC_METRICS, TWEET_ORGANIC_METRICS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_CONVERSATION_ID, Schema.OPTIONAL_STRING_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_EDIT_CONTROLS, TWEET_EDIT_CONTROLS_SCHEMA)
+          .field(Tweet.SERIALIZED_NAME_EDIT_HISTORY_TWEET_IDS, SchemaBuilder.array(Schema.STRING_SCHEMA))
+          .field(Tweet.SERIALIZED_NAME_REPLY_SETTINGS, Schema.OPTIONAL_STRING_SCHEMA);
 
   public static Struct convert(@Nonnull Tweet input) {
     return new Struct(TWEET_SCHEMA)
@@ -856,7 +874,7 @@ public class TweetConverter {
                     Optional.ofNullable(input.getCreatedAt())
                             .map(offset -> Date.from(offset.toInstant()))
                             .orElse(null))
-            .put(Tweet.SERIALIZED_NAME_TEXT, input.getText())
+            .put(Tweet.SERIALIZED_NAME_TEXT, input.getText().replaceAll("\n", "\\\\n"))
             .put(Tweet.SERIALIZED_NAME_AUTHOR_ID, input.getAuthorId())
             .put(Tweet.SERIALIZED_NAME_IN_REPLY_TO_USER_ID, input.getInReplyToUserId())
             .put(Tweet.SERIALIZED_NAME_REFERENCED_TWEETS,
@@ -915,6 +933,7 @@ public class TweetConverter {
   }
 
   public static final Schema TWEET_USER_SCHEMA = SchemaBuilder.struct()
+          .name("User")
           .field(User.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
           .field(User.SERIALIZED_NAME_NAME, Schema.STRING_SCHEMA)
           .field(User.SERIALIZED_NAME_USERNAME, Schema.STRING_SCHEMA)
@@ -932,6 +951,7 @@ public class TweetConverter {
   }
 
   public static final Schema TWEET_PLACE_GEO_SCHEMA = SchemaBuilder.struct()
+          .name("PlaceGeo")
           .optional()
           .field(Geo.SERIALIZED_NAME_TYPE, Schema.OPTIONAL_STRING_SCHEMA)
           .field(Geo.SERIALIZED_NAME_BBOX, SchemaBuilder.array(Schema.FLOAT64_SCHEMA).optional().build())
@@ -944,6 +964,7 @@ public class TweetConverter {
   }
 
   public static final Schema TWEET_PLACE_SCHEMA = SchemaBuilder.struct()
+          .name("Place")
           .field(Place.SERIALIZED_NAME_ID, Schema.STRING_SCHEMA)
           .field(Place.SERIALIZED_NAME_FULL_NAME, Schema.STRING_SCHEMA)
           .field(Place.SERIALIZED_NAME_NAME, Schema.OPTIONAL_STRING_SCHEMA)
@@ -966,14 +987,15 @@ public class TweetConverter {
                             .orElse(null));
   }
 
-  public static final Schema TWEET_EXPANSIONS_SCHEMA = SchemaBuilder.struct()
+  public static final Schema EXPANSIONS_SCHEMA = SchemaBuilder.struct()
+          .name("Expansions")
           .field(Expansions.SERIALIZED_NAME_USERS, SchemaBuilder.array(TWEET_USER_SCHEMA).optional().build())
           .field(Expansions.SERIALIZED_NAME_PLACES, SchemaBuilder.array(TWEET_PLACE_SCHEMA).optional().build())
           .optional()
           .build();
 
   public static Struct convert(@Nonnull Expansions expansions) {
-    return new Struct(TWEET_EXPANSIONS_SCHEMA)
+    return new Struct(EXPANSIONS_SCHEMA)
             .put(Expansions.SERIALIZED_NAME_USERS,
                     Optional.ofNullable(expansions.getUsers())
                             .map(list -> list.stream().map(TweetConverter::convert).collect(Collectors.toList()))
@@ -988,8 +1010,9 @@ public class TweetConverter {
   public static final String SERIALIZED_NAME_EXPANSIONS = "expansions";
 
   public static final Schema TWEET_WITH_EXPANSIONS_SCHEMA = SchemaBuilder.struct()
+          .name("TweetWithExpansions")
           .field(SERIALIZED_NAME_TWEET, TWEET_SCHEMA)
-          .field(SERIALIZED_NAME_EXPANSIONS, TWEET_EXPANSIONS_SCHEMA)
+          .field(SERIALIZED_NAME_EXPANSIONS, EXPANSIONS_SCHEMA)
           .build();
   public static Struct convert(@Nonnull Tweet tweet, Expansions expansions) {
 

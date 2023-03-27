@@ -1,0 +1,841 @@
+{
+  "connect.name": "TweetWithExpansions",
+  "fields": [
+    {
+      "name": "tweet",
+      "type": {
+        "type": "record",
+        "name": "Tweet",
+        "fields": [
+          {
+            "name": "id",
+            "type": "string"
+          },
+          {
+            "name": "created_at",
+            "type": [
+              "null",
+              {
+                "type": "long",
+                "connect.version": 1,
+                "connect.name": "org.apache.kafka.connect.data.Timestamp",
+                "logicalType": "timestamp-millis"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "text",
+            "type": "string"
+          },
+          {
+            "name": "author_id",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "in_reply_to_user_id",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "referenced_tweets",
+            "type": [
+              "null",
+              {
+                "type": "array",
+                "items": {
+                  "type": "record",
+                  "name": "TweetReferencedTweets",
+                  "fields": [
+                    {
+                      "name": "type",
+                      "type": "string"
+                    },
+                    {
+                      "name": "id",
+                      "type": "string"
+                    }
+                  ],
+                  "connect.name": "TweetReferencedTweets"
+                }
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "attachments",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetAttachments",
+                "fields": [
+                  {
+                    "name": "media_keys",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": "string"
+                      }
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "poll_ids",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": "string"
+                      }
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetAttachments"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "context_annotations",
+            "type": [
+              "null",
+              {
+                "type": "array",
+                "items": [
+                  "null",
+                  {
+                    "type": "record",
+                    "name": "ContextAnnotation",
+                    "fields": [
+                      {
+                        "name": "domain",
+                        "type": {
+                          "type": "record",
+                          "name": "ContextAnnotationDomainFields",
+                          "fields": [
+                            {
+                              "name": "id",
+                              "type": "string"
+                            },
+                            {
+                              "name": "name",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "description",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            }
+                          ],
+                          "connect.name": "ContextAnnotationDomainFields"
+                        }
+                      },
+                      {
+                        "name": "entity",
+                        "type": {
+                          "type": "record",
+                          "name": "ContextAnnotationEntityFields",
+                          "fields": [
+                            {
+                              "name": "id",
+                              "type": "string"
+                            },
+                            {
+                              "name": "name",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "description",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            }
+                          ],
+                          "connect.name": "ContextAnnotationEntityFields"
+                        }
+                      }
+                    ],
+                    "connect.name": "ContextAnnotation"
+                  }
+                ]
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "withheld",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetWithheld",
+                "fields": [
+                  {
+                    "name": "copyright",
+                    "type": "boolean"
+                  },
+                  {
+                    "name": "country_codes",
+                    "type": {
+                      "type": "array",
+                      "items": "string"
+                    }
+                  },
+                  {
+                    "name": "scope",
+                    "type": [
+                      "null",
+                      "string"
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetWithheld"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "geo",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetGeo",
+                "fields": [
+                  {
+                    "name": "coordinates",
+                    "type": [
+                      "null",
+                      {
+                        "type": "record",
+                        "name": "Point",
+                        "fields": [
+                          {
+                            "name": "type",
+                            "type": "string"
+                          },
+                          {
+                            "name": "coordinates",
+                            "type": {
+                              "type": "array",
+                              "items": "double"
+                            }
+                          }
+                        ],
+                        "connect.name": "Point"
+                      }
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "place_id",
+                    "type": [
+                      "null",
+                      "string"
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetGeo"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "entities",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "FullTextEntities",
+                "fields": [
+                  {
+                    "name": "urls",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "record",
+                          "name": "UrlEntity",
+                          "fields": [
+                            {
+                              "name": "start",
+                              "type": "int"
+                            },
+                            {
+                              "name": "end",
+                              "type": "int"
+                            },
+                            {
+                              "name": "url",
+                              "type": "string"
+                            },
+                            {
+                              "name": "expanded_url",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "display_url",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "unwound_url",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "status",
+                              "type": [
+                                "null",
+                                "int"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "title",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "description",
+                              "type": [
+                                "null",
+                                "string"
+                              ],
+                              "default": null
+                            },
+                            {
+                              "name": "images",
+                              "type": [
+                                "null",
+                                {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "record",
+                                    "name": "UrlImage",
+                                    "fields": [
+                                      {
+                                        "name": "url",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "name": "height",
+                                        "type": "int"
+                                      },
+                                      {
+                                        "name": "width",
+                                        "type": "int"
+                                      }
+                                    ],
+                                    "connect.name": "UrlImage"
+                                  }
+                                }
+                              ],
+                              "default": null
+                            }
+                          ],
+                          "connect.name": "UrlEntity"
+                        }
+                      }
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "hashtags",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "record",
+                          "name": "HashtagEntity",
+                          "fields": [
+                            {
+                              "name": "start",
+                              "type": "int"
+                            },
+                            {
+                              "name": "end",
+                              "type": "int"
+                            },
+                            {
+                              "name": "tag",
+                              "type": "string"
+                            }
+                          ],
+                          "connect.name": "HashtagEntity"
+                        }
+                      }
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "mentions",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "record",
+                          "name": "MentionEntity",
+                          "fields": [
+                            {
+                              "name": "start",
+                              "type": "int"
+                            },
+                            {
+                              "name": "end",
+                              "type": "int"
+                            },
+                            {
+                              "name": "username",
+                              "type": "string"
+                            },
+                            {
+                              "name": "id",
+                              "type": "string"
+                            }
+                          ],
+                          "connect.name": "MentionEntity"
+                        }
+                      }
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "cashtags",
+                    "type": [
+                      "null",
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "record",
+                          "name": "CashtagEntity",
+                          "fields": [
+                            {
+                              "name": "start",
+                              "type": "int"
+                            },
+                            {
+                              "name": "end",
+                              "type": "int"
+                            },
+                            {
+                              "name": "tag",
+                              "type": "string"
+                            }
+                          ],
+                          "connect.name": "CashtagEntity"
+                        }
+                      }
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "FullTextEntities"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "public_metrics",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetPublicMetrics",
+                "fields": [
+                  {
+                    "name": "retweet_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "reply_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "like_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "quote_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetPublicMetrics"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "possibly_sensitive",
+            "type": [
+              "null",
+              "boolean"
+            ],
+            "default": null
+          },
+          {
+            "name": "lang",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "source",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "non_public_metrics",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetNonPublicMetrics",
+                "fields": [
+                  {
+                    "name": "impression_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetNonPublicMetrics"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "promoted_metrics",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetPromotedMetrics",
+                "fields": [
+                  {
+                    "name": "impression_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "like_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "reply_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  },
+                  {
+                    "name": "retweet_count",
+                    "type": [
+                      "null",
+                      "int"
+                    ],
+                    "default": null
+                  }
+                ],
+                "connect.name": "TweetPromotedMetrics"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "organic_metrics",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetOrganicMetrics",
+                "fields": [
+                  {
+                    "name": "impression_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "retweet_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "reply_count",
+                    "type": "int"
+                  },
+                  {
+                    "name": "like_count",
+                    "type": "int"
+                  }
+                ],
+                "connect.name": "TweetOrganicMetrics"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "conversation_id",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          },
+          {
+            "name": "edit_controls",
+            "type": [
+              "null",
+              {
+                "type": "record",
+                "name": "TweetEditControls",
+                "fields": [
+                  {
+                    "name": "editable_until",
+                    "type": {
+                      "type": "long",
+                      "connect.version": 1,
+                      "connect.name": "org.apache.kafka.connect.data.Timestamp",
+                      "logicalType": "timestamp-millis"
+                    }
+                  },
+                  {
+                    "name": "edits_remaining",
+                    "type": "int"
+                  },
+                  {
+                    "name": "is_edit_eligible",
+                    "type": "boolean"
+                  }
+                ],
+                "connect.name": "TweetEditControls"
+              }
+            ],
+            "default": null
+          },
+          {
+            "name": "edit_history_tweet_ids",
+            "type": {
+              "type": "array",
+              "items": "string"
+            }
+          },
+          {
+            "name": "reply_settings",
+            "type": [
+              "null",
+              "string"
+            ],
+            "default": null
+          }
+        ],
+        "connect.name": "Tweet"
+      }
+    },
+    {
+      "name": "expansions",
+      "type": [
+        "null",
+        {
+          "connect.name": "Expansions",
+          "fields": [
+            {
+              "name": "users",
+              "type": [
+                "null",
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "record",
+                    "name": "User",
+                    "fields": [
+                      {
+                        "name": "id",
+                        "type": "string"
+                      },
+                      {
+                        "name": "name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "username",
+                        "type": "string"
+                      },
+                      {
+                        "name": "description",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "location",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      }
+                    ],
+                    "connect.name": "User"
+                  }
+                }
+              ],
+              "default": null
+            },
+            {
+              "name": "places",
+              "type": [
+                "null",
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "record",
+                    "name": "Place",
+                    "fields": [
+                      {
+                        "name": "id",
+                        "type": "string"
+                      },
+                      {
+                        "name": "full_name",
+                        "type": "string"
+                      },
+                      {
+                        "name": "name",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "country",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "country_code",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "place_type",
+                        "type": [
+                          "null",
+                          "string"
+                        ],
+                        "default": null
+                      },
+                      {
+                        "name": "geo",
+                        "type": [
+                          "null",
+                          {
+                            "type": "record",
+                            "name": "PlaceGeo",
+                            "fields": [
+                              {
+                                "name": "type",
+                                "type": [
+                                  "null",
+                                  "string"
+                                ],
+                                "default": null
+                              },
+                              {
+                                "name": "bbox",
+                                "type": [
+                                  "null",
+                                  {
+                                    "type": "array",
+                                    "items": "double"
+                                  }
+                                ],
+                                "default": null
+                              }
+                            ],
+                            "connect.name": "PlaceGeo"
+                          }
+                        ],
+                        "default": null
+                      }
+                ],
+                "connect.name": "Place"
+              }
+            }
+          ],
+          "default": null
+        }
+      ],
+      "name": "Expansions",
+      "type": "record"
+    }],"default":null}],
+  "name":"TweetWithExpansions",
+  "type":"record"
+}

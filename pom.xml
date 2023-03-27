@@ -11,13 +11,13 @@
     <artifactId>kafka-connect-twitter</artifactId>
     <version>0.3-SNAPSHOT</version>
     <name>kafka-connect-twitter</name>
-    <url>https://github.com/jcustenborder/kafka-connect-twitter</url>
+    <url>https://github.com/KumKeeHyun/kafka-connect-twitter</url>
     <inceptionYear>2016</inceptionYear>
     <description>Kafka Connect plugin for streaming data from Twitter to Kafka.</description>
     <licenses>
         <license>
             <name>Apache License 2.0</name>
-            <url>https:/github.com/jcustenborder/kafka-connect-twitter/LICENSE</url>
+            <url>https:/github.com/KumKeeHyun/kafka-connect-twitter/LICENSE</url>
             <distribution>repo</distribution>
         </license>
     </licenses>
@@ -58,7 +58,6 @@
             <groupId>io.confluent</groupId>
             <artifactId>kafka-connect-avro-converter</artifactId>
             <version>7.3.0</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
     <build>
@@ -85,6 +84,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>3.1.2</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.avro</groupId>
+                <artifactId>avro-maven-plugin</artifactId>
+                <version>1.11.0</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>schema</goal>
+                            <goal>protocol</goal>
+                            <goal>idl-protocol</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/resources/avro</sourceDirectory>
+                            <stringType>String</stringType>
+                            <createSetters>false</createSetters>
+                            <enableDecimalLogicalType>true</enableDecimalLogicalType>
+                            <fieldVisibility>private</fieldVisibility>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
